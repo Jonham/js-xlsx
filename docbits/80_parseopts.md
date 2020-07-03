@@ -23,6 +23,8 @@ The exported `read` and `readFile` functions accept an options argument:
 |`bookVBA`    | false   | If true, copy VBA blob to `vbaraw` field **          |
 |`password`   | ""      | If defined and file is encrypted, use password **    |
 |`WTF`        | false   | If true, throw errors on unexpected file features ** |
+|`sheets`     |         | If specified, only parse specified sheets **         |
+|`PRN`        | false   | If true, allow parsing of PRN files **               |
 
 - Even if `cellNF` is false, formatted text will be generated and saved to `.w`
 - In some cases, sheets may be parsed even if `bookSheets` is false.
@@ -36,17 +38,22 @@ The exported `read` and `readFile` functions accept an options argument:
     * `cfb` object for formats using CFB containers
 - `sheetRows-1` rows will be generated when looking at the JSON object output
   (since the header row is counted as a row when parsing the data)
+- By default all worksheets are parsed.  `sheets` restricts based on input type:
+    * number: zero-based index of worksheet to parse (`0` is first worksheet)
+    * string: name of worksheet to parse (case insensitive)
+    * array of numbers and strings to select multiple worksheets.
 - `bookVBA` merely exposes the raw VBA CFB object.  It does not parse the data.
   XLSM and XLSB store the VBA CFB object in `xl/vbaProject.bin`. BIFF8 XLS mixes
   the VBA entries alongside the core Workbook entry, so the library generates a
   new XLSB-compatible blob from the XLS CFB container.
 - `codepage` is applied to BIFF2 - BIFF5 files without `CodePage` records and to
   CSV files without BOM in `type:"binary"`.  BIFF8 XLS always defaults to 1200.
+- `PRN` affects parsing of text files without a common delimiter character.
 - Currently only XOR encryption is supported.  Unsupported error will be thrown
   for files employing other encryption methods.
 - WTF is mainly for development.  By default, the parser will suppress read
   errors on single worksheets, allowing you to read from the worksheets that do
-  parse properly. Setting `WTF:1` forces those errors to be thrown.
+  parse properly. Setting `WTF:true` forces those errors to be thrown.
 
 ### Input Type
 

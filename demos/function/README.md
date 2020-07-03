@@ -7,12 +7,12 @@ generation.  As a result, it is sometimes sensible to organize applications so
 that the "last mile" conversion between JSON data and spreadsheet files is
 independent from the main application.
 
-The most obvious architecture would split off the JSON data conversion as a
+The straightforward architecture would split off the JSON data conversion as a
 separate microservice or application.  Since it is only needed when an import or
 export is requested, and since the process itself is relatively independent from
 the rest of a typical service, a "Serverless" architecture makes a great fit.
-Since the "function" is separate from the rest of the application, it is easy to
-integrate into a platform built in Java or Go or Python or another language!
+Since the "function" is separate from the rest of the application, it can be
+integrated into a platform built in Java or Go or Python or another language!
 
 This demo discusses general architectures and provides examples for popular
 commercial systems and self-hosted alternatives.  The examples are merely
@@ -71,8 +71,8 @@ module.exports = (hook) => {
 
 #### Report Generation
 
-For an existing platform that already generates JSON or CSV or HTML output, it
-is very easy to embellish output in an Excel-friendly XLSX file.  The
+For an existing platform that already generates JSON or CSV or HTML output, the
+library can process the data and generate a new file with embellishments. The
 `XLSX.utils.sheet_add_json` and `XLSX.utils.sheet_add_aoa` functions can add
 data rows to an existing worksheet:
 
@@ -121,3 +121,14 @@ HTTP trigger that converts the submitted file to CSV.
 
 When deploying on Azure, be sure to install the module from the remote console,
 as described in the "Azure Functions JavaScript developer guide".
+
+#### Firebase Functions
+
+Firebase functions can be triggered via HTTP requests, similar to a REST API.
+In the `Firebase` directory, the example function reads files sent through
+HTTP and converts it to a CSV and sends the response in the form of a string.
+
+To run this demo locally, run `npm i -g firebase-tools` to install the
+Firebase CLI and `npm i` to install the dependencies, then `firebase use --add`
+to connect to an existing Firebase project. Run `firebase emulators:start` to
+start the local server.
